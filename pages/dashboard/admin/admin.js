@@ -1,8 +1,11 @@
+import DashBoardHome from '@/components/dashboard/dashboard/dashBoard';
 import Layout from '@/components/layout/Layout';
  
 const admin = () => {
     return (
-        <>fdsgfd</>
+        <Layout>
+            <DashBoardHome/>
+        </Layout>
     );
 };
 

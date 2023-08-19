@@ -27,12 +27,12 @@ function Layout({ children, props }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const data = [
     {
-      path: "/home/contact",
+      path: "/dashboard/admin/admin",
       content: "Dashboard",
       icon: "/home-trend-up.svg"
     },
     {
-      path: "/home/about",
+      path: "/product/stock",
       content: "stock",
       icon: "/status-up.svg"
     },
