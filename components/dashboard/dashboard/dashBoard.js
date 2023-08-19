@@ -1,5 +1,6 @@
 import DashboardHeader from "./dashboardHeader";
 import DashboardProfit from "./dashboardProfit";
+import DashboardOrder from "./orderDashboard";
 
  
 const DashBoardHome = () => {
@@ -7,6 +8,7 @@ const DashBoardHome = () => {
         <div>
             <DashboardHeader/>
             <DashboardProfit/>
+            <DashboardOrder/>
         </div>
     );
 };

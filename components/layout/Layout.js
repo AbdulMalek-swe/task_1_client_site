@@ -164,6 +164,11 @@ function Layout({ children, props }) {
       >
         <Toolbar />
         {children}
+       
+        <div className="flex justify-between">
+        <p className="text-base text-gray-400 py-5 ">Copyright © 2077 Logobly. All rights reserved.</p>
+          <p className="text-base text-gray-400 py-5 ">Ver.2U1X1F1B1WA</p>
+        </div>
       </Box>
     </Box>
   );
