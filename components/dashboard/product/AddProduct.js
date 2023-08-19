@@ -4,23 +4,35 @@ import { ErrorMessage, Field, Formik } from "formik";
 import dynamic from 'next/dynamic'; // Import dynamic from next/dynamic
 import { useEffect, useRef, useState } from "react";
  import { DropzoneArea } from 'react-mui-dropzone';
+  import axios  from "../../../utils/axios";
+import { toast } from "react-toastify";
 const AddProduct = ({ open, handleClose }) => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const handleFileChange = (files) => {
       setUploadedFiles(files);
     };
+    const ProductAddedapi = async (value)=>{
+        try {
+            const res = await axios.post(`/product`, value)
+            const {status,data} = res;
+            if(status===200){
+                toast.success("product added successfully")
+            }
+          } catch (error) {
+              toast.error(error?.response?.data?.error)
+          }
+    }
     return (
         <div>
- 
             <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <div className="fixed inset-0 flex items-center justify-center z-50  ">  
-                    <div className="bg-white p-6 rounded-lg relative lg:w-1/3 sm:w-1/2 w-11/12 font-arial ">
-                        <div className=" flex justify-between items-center mb-6">
+                <div className="overflow-y-scroll  flex items-center justify-center z-50  ">  
+                    <div className="bg-white p-3 rounded-lg  lg:w-1/3 sm:w-1/2 w-11/12 font-arial ">
+                        <div className=" flex justify-between items-center mb-3">
                             <div className="text-left">
                                 <h1 className=" font-semibold text-2xl md:text-xl  font-sans text-gray-900 leading-10 capitalize">add product </h1>
                             </div>
@@ -35,7 +47,7 @@ const AddProduct = ({ open, handleClose }) => {
                             initialValues={{
                                  title: "",
                                  description:"",
-                                 stock:"",
+                                 stock:1||null,
                                  productAddedDate:"" ,
                                  purchasePrice:1||null,
                                  sellingPrice:1||null
@@ -48,7 +60,7 @@ const AddProduct = ({ open, handleClose }) => {
                                 return error;
                             }}
                             onSubmit={(values, { resetForm }) => {
-                                Registerapi(values);
+                                ProductAddedapi(values);
                             }}
                         >
                             {({
@@ -61,7 +73,7 @@ const AddProduct = ({ open, handleClose }) => {
                                 isSubmitting,
 
                             }) => (
-                                <form onSubmit={handleSubmit} className='capitalize space-y-2'>
+                                <form onSubmit={handleSubmit} className='capitalize space-y-2  '>
                                     {/* Product Title fied  */}
                                     <div className="mb-4  ">
                                         <label htmlFor=" Product Title" className="block lg:text-base text-sm font-normal text-gray-900 leading-4 capitalize mb-1 mt-5">
@@ -96,16 +108,18 @@ const AddProduct = ({ open, handleClose }) => {
                                             id="outlined-multiline-flexible"
                                             fullWidth
                                            multiline
-                                           rows={4}
+                                           rows={2}
                                            
                                         />
                                         <ErrorMessage name="description" component="div" className="text-red-500 text-sm mt-1" />
                                     </div>
                                    {/* dropzone area  */}
-
-                               <DropzoneArea  
-                                className="w-1/2"
+ 
+<DropzoneArea  
+                                
                                />
+ 
+                               
                                    
                                     <div className="mb-8">
                                         <label htmlFor=" Product Title" className="block lg:text-base text-sm font-normal text-gray-900 leading-4 capitalize mb-1 mt-5">
@@ -131,7 +145,7 @@ const AddProduct = ({ open, handleClose }) => {
                                         <TextField
                                             size="small"
                                             type="number"
-                                            name="productAddedDate"
+                                            name="stock"
                                             placeholder="Enter your product stock"
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -149,7 +163,7 @@ const AddProduct = ({ open, handleClose }) => {
                                         <TextField
                                             size="small"
                                             type="number"
-                                            name="title"
+                                            name="purchasePrice"
                                             placeholder="Enter your purchase"
                                             onChange={handleChange}
                                             onBlur={handleBlur}

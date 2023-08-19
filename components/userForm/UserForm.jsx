@@ -1,3 +1,4 @@
+ 
 import { ErrorMessage, Field, Formik } from "formik";
 import { useRouter } from "next/router";
 import StarIcon from '@mui/icons-material/Star';
@@ -11,24 +12,36 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Link from "next/link";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import { toast } from "react-toastify";
+import { useCookies } from "react-cookie";
+import axios from "../../utils/axios";
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-import axios from 'axios';
+ 
 const UserForm = () => {
-
+  const [cookie, setCookie] = useCookies(["token"]);
   const route = useRouter();
-  const pathName = route.pathname.substring(route.pathname.lastIndexOf("/") + 1) === 'register' ? true : false;
+  const pathName = route.pathname.substring(route.pathname.lastIndexOf("/") + 1) === 'Register' ? true : false;
   const [showPassword, setShowPassword] = useState(false)
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-  const Registerapi = async (value) => {
+   let endPointName = pathName?"register":"login";
+   const Registerapi = async (value) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/register', value)
-      console.log(response.data);
-    } catch {
-
+      console.log(value);
+      const response = await axios.post(`${endPointName}`, value)
+       const {status , data} = response;
+       if(status===200){
+        setCookie("token", data1?.access_token, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7, // 1 week
+        });
+        toast.success("successfully auth done")
+       }
+    } catch(error) {
+          toast.error(error?.response?.data?.error)
     }
+ 
   }
   return (
     <>
@@ -39,12 +52,10 @@ const UserForm = () => {
             {/* register field code here using formik */}
             <div className=' mr-20 ml-20 lg:ml-20 lg:mr-20 md:ml-8 md:mr-8 '>
               <div className="lg:mb-10 mb-5">
-                <Image src="/Logo.svg" width={100} height={100} />
+                <Image src="/Logo.svg" width={100} height={100} alt="loading..."/>
               </div>
               <div className='text-center lg:mb-10 mb-5'>
                 <h1 className='mb-4 font-bold lg:text-3xl md:text-2xl text-xl font-sans text-black leading-10 uppercase'> {pathName ? 'Get started now ✨' : "Welcome back 👋"}</h1>
-
-
                 <p className="text-gray-500  md:text-base text-sm">Lorem ipsum dolor sit amet consectetur. Hendrerit vulputate vitae gravida risus rhoncus. Montes nam amet</p>
               </div>
               <Formik
@@ -55,10 +66,8 @@ const UserForm = () => {
                   password: "",
                   role: 'admin' || "",
                   term: false
-
                 }}
                 validate={(values) => {
-
                   const error = {};
                   if (!values.term) {
                     error.term = "Fill up condition";
@@ -75,9 +84,7 @@ const UserForm = () => {
                   else if (values.password.length < 6) {
                     error.password = "minimum six character ";
                   }
-                  else if (!/^[A-Za-z0-9@#$%]+$/.test(values.password)) {
-                    error.password = "Password must contain only letters, numbers, @, #, or $ characters.";
-                  }
+                  
                   return error;
                 }}
                 onSubmit={(values, { resetForm }) => {
@@ -218,7 +225,7 @@ const UserForm = () => {
                     </div>}
                     {!pathName && <div className="mb-8 flex justify-between items-center ">
                       <div className="flex items-center">
-                        <Checkbox  {...label} /> <p className='text-black8'>  Remember me
+                        <Checkbox  {...label} name="term" onChange={handleChange}  /> <p className='text-black8'>  Remember me
                         </p>
                       </div>
                       <div>
@@ -236,10 +243,10 @@ const UserForm = () => {
 
               <div className=" rounded-xl text-black8 text-center   bg-white flex justify-center lg:mt-10 mt-5">
                 {!pathName && <p className='text-black8'> Don't have an account?
-                  <Link href="/userForm/register" className="text-blue-600 hover:underline"> sign up for free</Link>
+                  <Link href="/userForm/Register" className="text-blue-600 hover:underline"> sign up for free</Link>
                 </p>}
                 {pathName && <p className='text-black8'>Already have an account?
-                  <Link href="/userForm/login" className="text-blue-600 hover:underline"> Log in</Link>
+                  <Link href="/userForm/Login" className="text-blue-600 hover:underline"> Log in</Link>
                 </p>}
 
               </div>
@@ -276,3 +283,9 @@ const UserForm = () => {
 };
 
 export default UserForm;
+
+// export const getStaticProps = async () => {
+//   const res = await fetch('https://api.github.com/repos/vercel/next.js')
+//   const repo = await res.json()
+//   return { props: { repo } }
+// }

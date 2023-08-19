@@ -1,10 +1,8 @@
 import Link from "next/link";
-
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
@@ -16,23 +14,38 @@ import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/router";
 
 const drawerWidth = 240;
 function Layout({ children, props }) {
   const window = props;
+  const [cookies] = useCookies(['token']);
+  const token = cookies['token'];
+  let router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const state = useSelector(state=>state.User?.UserData)
+  // find the page latest endpoint name
+  // const pathName = router.pathname.substring(router.pathname.lastIndexOf("/") + 1)
+ let dashboardHead = "Stock"
+ let roleBaseDashBoard = "user/user";
+ if(state?.role==="admin"){
+  roleBaseDashBoard = "admin/admin"
+ }
+
+
   const data = [
     {
-      path: "/dashboard/admin/admin",
+      path: `/dashboard/${roleBaseDashBoard}`,
       content: "Dashboard",
       icon: "/home-trend-up.svg"
     },
     {
-      path: "/product/stock",
+      path: "/",
       content: "stock",
       icon: "/status-up.svg"
     },
@@ -45,7 +58,8 @@ function Layout({ children, props }) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const dashboardHead = "Stock"
+  
+   
   const drawer = (
     <div>
       <img src="/Logo.svg" alt='loading...' className='w-full h-16 mt-6 mb-8' />
@@ -55,7 +69,7 @@ function Layout({ children, props }) {
             <div className="text-sm"> business</div>
             <div>
             <Image src='/add.svg'   width={30} height={30} className="bg-gray-200 filter saturate-0 hover:saturate-100"
-               />
+             alt="loading..."  />
             </div>
           </div>
        
@@ -64,7 +78,7 @@ function Layout({ children, props }) {
             <ListItem key={index} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <Image src={icon} alt="loading..." width={20} height={100} />
+                  <Image src={icon} alt="loading..." width={20} height={100}   />
                 </ListItemIcon>
                 <ListItemText primary={content} className="-ml-7 mt-2  capitalize" />
               </ListItemButton>
@@ -111,18 +125,18 @@ function Layout({ children, props }) {
           >
             <MenuIcon />
           </IconButton>
-          <h1 className="-ml-2 xl:text2xl md:text-xl text-lg"> {dashboardHead}</h1>
+          <h1 className="-ml-2 xl:text2xl md:text-xl text-lg border-2 inline-block"> {dashboardHead} </h1>
           <div className='w-full flex justify-end items-center'>
-            <IconButton sx={{ p: 0 }}>
+            { state?.email && <IconButton sx={{ p: 0 }}>
               <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-            </IconButton>
-            <div className='mx-2 text-center'>
-              <Link href="">Log in</Link>
-            </div>
-            <div className='mx-2 text-left'>
-              <p className="xl:text-lg text-base">Esther Howard</p>
-              <span className="lg:text-base text-xs">howare@property.com</span>
-            </div>
+            </IconButton>}
+          {  !state?.email && <div className='mx-2 text-center'>
+              <Link href="/userForm/Login">Log in</Link>
+            </div>}
+            { state?.email && <div className='mx-2 text-left'>
+              <p className="xl:text-lg text-base">{state?.fullName}</p>
+              <span className="lg:text-base text-xs"> {state?.email}</span>
+            </div>}
           </div>
         </Toolbar>
       </AppBar>
@@ -175,10 +189,7 @@ function Layout({ children, props }) {
 }
 
 Layout.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
+   
   window: PropTypes.func,
 };
 

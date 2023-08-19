@@ -64,10 +64,10 @@ const ShowProduct = () => {
               <TableCell align="left" className='text-gray-500 capitalize py-3'>{row.selling}</TableCell>
               <TableCell align="left" className='text-gray-500 capitalize py-3'> 
                 <button className='mr-5'>
-                    <Image src='/trash-2.svg' width={20} height={100}/>
+                    <Image src='/trash-2.svg' width={20} height={100} alt='loading...'/>
                 </button>
                 <button>
-                    <Image src='/edit-2.svg' width={20} height={100}/>
+                    <Image src='/edit-2.svg' width={20} height={100} alt='loading...'/>
                 </button>
               </TableCell>
             </TableRow>

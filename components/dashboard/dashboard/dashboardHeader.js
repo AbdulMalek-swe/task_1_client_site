@@ -36,7 +36,7 @@ const DashboardHeader = () => {
                         <button className="text-sm bg-blue-600 px-2 py-1 text-white rounded-md" >view sales</button>
                     </div>
                     <div>
-                        <Image src="/3d-cup 1.png" width={50} height={100}/>
+                        <Image src="/3d-cup 1.png" width={50} height={100} alt="loading..."/>
                     </div>
                 </div>
             </div>
@@ -48,13 +48,13 @@ const DashboardHeader = () => {
                         
                     </div>
                     <div>
-                        <Image src="/MoreVert.svg" width={40} height={100}/>
+                        <Image src="/MoreVert.svg" width={40} height={100} alt="loading..."/>
                     </div>
                 </div>
                 <div className="grid grid-cols-4 gap-4">
                { data.map(({icon,value,rate},index)=><div className="grid grid-cols-2 items-center p-5 gap-x-3 ">
                   <div>
-                 <Image src={icon} width={50} height={100}  className={`${index === 0 ? 'bg-blue-600' : ''} ${index === 1 ? 'bg-lime-600' : ''} ${index === 2 ? 'bg-orange-600' : ''} ${index === 3 ? 'bg-sky-600' : ''}`} />
+                 <Image alt="loading..." src={icon} width={50} height={100}  className={`${index === 0 ? 'bg-blue-600' : ''} ${index === 1 ? 'bg-lime-600' : ''} ${index === 2 ? 'bg-orange-600' : ''} ${index === 3 ? 'bg-sky-600' : ''}`} />
                     </div>
                    <div className="px-">
                         <h2 className="text-xs lg:text-sm"> {value} </h2>

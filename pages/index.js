@@ -7,7 +7,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { PaginationItem } from '@mui/material';
 import { useState } from 'react';
-import Product from '@/components/dashboard/product/product'
+import Product from '@/components/dashboard/product/Product'
  
 const inter = Inter({ subsets: ['latin'] })
 

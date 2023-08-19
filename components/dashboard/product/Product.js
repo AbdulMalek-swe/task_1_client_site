@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
-import ShowProduct from './showProduct';
-import AddProduct from './addProduct';
+import ShowProduct from './ShowProduct';
+import AddProduct from './AddProduct';
+// import axios from 'axios';
 
 const Product = () => {
     const [open, setOpen] =  useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-  
+   
     return (
         <div>
            <div className='flex justify-between items-center'>
@@ -17,7 +18,7 @@ const Product = () => {
                </div>
                <div>
                 <button className='flex items-center bg-blue-600 px-3 py-2 rounded-lg text-sm text-white font-bold'  onClick={handleOpen}>  
-                    <Image src='/add.svg' className='mr-3' width={30} height={30}/>
+                    <Image alt='loading...' src='/add.svg' className='mr-3' width={30} height={30}/>
                    <span> Add Product</span>
                 </button>
                </div>

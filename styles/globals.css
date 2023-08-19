@@ -4,3 +4,8 @@
 .rc-pagination-next{
   display: none !important;
 }
+.MuiDropzoneArea-root {
+  height: 162px !important;
+ 
+}
+ 

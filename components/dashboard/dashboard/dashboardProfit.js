@@ -111,13 +111,13 @@ const DashboardProfit = () => {
                 <p className=" text-sm  ">Last month balance $234.40k</p>
               </div>
               <div>
-                <Image src="/MoreVert.svg" width={40} height={100} />
+                <Image src="/MoreVert.svg" width={40} height={100} alt='loading'/>
               </div>
             </div>
             <div className=" ">
               {data1.map(({ icon, value, rate }, index) => <div className="flex lg:py-5 py-3">
                 <div className='mr-3'>
-                  <Image src={icon} width={50} height={100} className={`${index === 0 ? 'bg-blue-600' : ''} ${index === 1 ? 'bg-lime-600' : ''} ${index === 2 ? 'bg-orange-600' : ''} ${index === 3 ? 'bg-sky-600' : ''}`} />
+                  <Image alt='loading' src={icon} width={50} height={100} className={`${index === 0 ? 'bg-blue-600' : ''} ${index === 1 ? 'bg-lime-600' : ''} ${index === 2 ? 'bg-orange-600' : ''} ${index === 3 ? 'bg-sky-600' : ''}`} />
                 </div>
                 <div className="px-">
                   <h2 className="lg:text-xl  text-base">${rate}k</h2>
@@ -135,7 +135,7 @@ const DashboardProfit = () => {
 
             </div>
             <div>
-              <Image src="/MoreVert.svg" width={40} height={100} />
+              <Image src="/MoreVert.svg" width={40} height={100} alt='loading...' />
             </div>
           </div>
           <ResponsiveContainer width="100%" height="100%" aspect={2 / 5} maxHeight={250}>

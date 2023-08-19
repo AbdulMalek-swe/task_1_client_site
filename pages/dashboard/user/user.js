@@ -1,14 +1,17 @@
  
-import Product from "@/components/dashboard/product/product";
+import DashBoardHome from "@/components/dashboard/dashboard/dashBoard";
 import Layout from "@/components/layout/Layout";
-
- 
+import withAuthUser from "@/hoc/wihtAdminUser";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 const user = () => {
+    
     return (
    
-       <Layout>  </Layout>
+       <Layout>  <DashBoardHome/> </Layout>
  
     );
 };
 
-export default user;
+export default  withAuthUser(user) 
