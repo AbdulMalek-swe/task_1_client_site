@@ -14,34 +14,19 @@ import { toast } from 'react-toastify';
 import Link from 'next/link';
 import Moment from 'react-moment';
 import { useCookies } from 'react-cookie';
+import { getProduct } from '@/hooks/productFetch';
+import { useSelector } from 'react-redux';
+import { deleteProduct } from '@/hooks/deleteProduct';
 const ShowProduct = () => {
   const [cookie] = useCookies(["token"])
   const token = cookie["token"];
-     const [product,setProduct] = useState([])
-     async function getProduct(){
-      try {
-         const response = await axios.get("/product")
-         const {status,data} = response;
-
-         if(status===200){
-          setProduct(data.result)
-         }
-      } catch (error) {
-         toast.error("")
-      }
-    }
+ 
+     const product = useSelector(state=>state.reducer.product.products )
+    
      useEffect(()=>{
-      getProduct()
+       getProduct();
      },[])
-  const deleteProduct = async (id)=>{
-    try {
-      const result = await axios.delete(`/product/${id}`);
-      toast.success("successfully delete product")
-      getProduct()
-    } catch (error) {
-       toast.error(error?.response?.data?.error)
-    }
-  }
+  
   function filterDate(dateString) {
     const today = new Date();
     const productAddedDate = new Date(dateString);

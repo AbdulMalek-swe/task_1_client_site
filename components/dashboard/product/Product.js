@@ -8,7 +8,7 @@ const Product = () => {
     const [open, setOpen] =  useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const state = useSelector(state=>state.User.UserData)
+    const state = useSelector(state=>state?.reducer.User.UserData)
     return (
         <div>
            <div className='flex justify-between items-center'>

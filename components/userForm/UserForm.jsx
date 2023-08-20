@@ -232,7 +232,7 @@ const UserForm = () => {
                     </div>}
                     {!pathName && <div className="mb-8 flex justify-between items-center ">
                       <div className="flex items-center">
-                        <Checkbox  {...label} name="term" onChange={handleChange}  /> <p className='text-black8'>  Remember me
+                        <Checkbox className='-ml-2.5' {...label} name="term" onChange={handleChange}  /> <p  >  Remember me
                         </p>
                       </div>
                       <div>

@@ -3,32 +3,17 @@ import axios from "../../../utils/axios";
 import { ErrorMessage, Formik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getSingleProduct } from "@/hooks/productFetch";
+import { updateProduct } from "@/hooks/updateProduct";
+ 
  const ReniewProduct = () => {
     const router = useRouter();
     const {Id} = router.query;
-    
-    const [singleProduct,setSingleProduct] = useState({})
     useEffect(()=>{
-        async function singleProduct(){
-            try {
-                const res= await axios.get(`/product/${Id}`)
-              
-          setSingleProduct(res?.data?.result)
-            } catch (error) {
-                
-            }
-        }    
-        singleProduct();
+        getSingleProduct(Id)
     },[Id])
-    const updateProduct = async (values)=>{
-        try {
-            const res= await axios.patch(`/product/${Id}`,values)
-          console.log(res);
-        } catch (error) {
-            
-        }
-    }
-    console.log(singleProduct?.productAddedDate);
+    const singleProduct = useSelector(state=>state.reducer.product.singleProduct)
     return ( 
         <div>
             <div className=" ">   
@@ -56,7 +41,7 @@ import { useEffect, useState } from "react";
                                 return error;
                             }}
                             onSubmit={(values, { resetForm }) => {
-                                updateProduct(values);
+                                updateProduct(Id,values);
                             }}
                         >
                             {({

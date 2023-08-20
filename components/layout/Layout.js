@@ -23,6 +23,7 @@ import { useRouter } from "next/router";
 import store from "@/rtk/store";
 import { addUserActions } from "@/rtk/userSlice/addUserSlice";
 import { toast } from "react-toastify";
+import { addProductActions } from "@/rtk/productSlice/productSlice";
 
 const drawerWidth = 240;
 function Layout({ children, props }) {
@@ -31,7 +32,7 @@ function Layout({ children, props }) {
   const token = cookies['token'];
   let router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const state = useSelector(state=>state.User?.UserData)
+  const state = useSelector(state=>state?.reducer.User?.UserData)
   console.log(state);
   // find the page latest endpoint name
   const pathName = router.pathname.substring(router.pathname.lastIndexOf("/") + 1)
@@ -86,6 +87,7 @@ function Layout({ children, props }) {
   const [,,removeCookie] = useCookies(["token"])
    const logout = async ()=>{
     store.dispatch(addUserActions.removeUser());
+    store.dispatch(addProductActions.removeProduct());
     removeCookie("token", { path: "/" });
     toast.success("successfully log out")
    }

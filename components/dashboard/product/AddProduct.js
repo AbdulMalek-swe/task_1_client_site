@@ -6,22 +6,13 @@ import { useEffect, useRef, useState } from "react";
  import { DropzoneArea } from 'react-mui-dropzone';
   import axios  from "../../../utils/axios";
 import { toast } from "react-toastify";
+import { ProductAddedapi } from "@/hooks/addedProduct";
 const AddProduct = ({ open, handleClose }) => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const handleFileChange = (files) => {
       setUploadedFiles(files);
     };
-    const ProductAddedapi = async (value)=>{
-        try {
-            const res = await axios.post(`/product`, value)
-            const {status,data} = res;
-            if(status===200){
-                toast.success("product added successfully")
-            }
-          } catch (error) {
-              toast.error(error?.response?.data?.error)
-          }
-    }
+  
     return (
         <div>
             <Modal
