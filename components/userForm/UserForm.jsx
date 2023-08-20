@@ -15,6 +15,9 @@ import RadioGroup from '@mui/material/RadioGroup';
 import { toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import axios from "../../utils/axios";
+import store from "@/rtk/store";
+import { addUserActions } from "@/rtk/userSlice/addUserSlice";
+import Head from "next/head";
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
  
 const UserForm = () => {
@@ -28,15 +31,16 @@ const UserForm = () => {
    let endPointName = pathName?"register":"login";
    const Registerapi = async (value) => {
     try {
-      console.log(value);
       const response = await axios.post(`${endPointName}`, value)
        const {status , data} = response;
+       console.log( response);
        if(status===200){
-        setCookie("token", data1?.access_token, {
+        setCookie("token", data?.access_token, {
           path: "/",
           maxAge: 60 * 60 * 24 * 7, // 1 week
         });
-        toast.success("successfully auth done")
+        store.dispatch(addUserActions.addUser(data.result))
+        toast.success("successfully register done")
        }
     } catch(error) {
           toast.error(error?.response?.data?.error)
@@ -45,6 +49,9 @@ const UserForm = () => {
   }
   return (
     <>
+    <Head>
+      <title>Authentication</title>
+    </Head>
       <div className="h-screen flex items-center ">
 
         <div className="flex items-center justify-center    md:w-1/2 h-full    ">

@@ -14,7 +14,7 @@ const withPublic = (WrappedComponent) => {
     }
     // If we are on server, return null
     // return <WrappedComponent {...props} />;
-    return null;
+    return <WrappedComponent {...props} />;
   };
 };
 

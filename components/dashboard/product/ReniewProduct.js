@@ -1,56 +1,52 @@
-import { Modal, TextField } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
-import { ErrorMessage, Field, Formik } from "formik";
-import dynamic from 'next/dynamic'; // Import dynamic from next/dynamic
-import { useEffect, useRef, useState } from "react";
- import { DropzoneArea } from 'react-mui-dropzone';
-  import axios  from "../../../utils/axios";
-import { toast } from "react-toastify";
-const AddProduct = ({ open, handleClose }) => {
-    const [uploadedFiles, setUploadedFiles] = useState([]);
-    const handleFileChange = (files) => {
-      setUploadedFiles(files);
-    };
-    const ProductAddedapi = async (value)=>{
-        try {
-            const res = await axios.post(`/product`, value)
-            const {status,data} = res;
-            if(status===200){
-                toast.success("product added successfully")
+import { TextField } from "@mui/material";
+import axios from "../../../utils/axios";
+import { ErrorMessage, Formik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+ const ReniewProduct = () => {
+    const router = useRouter();
+    const {Id} = router.query;
+    
+    const [singleProduct,setSingleProduct] = useState({})
+    useEffect(()=>{
+        async function singleProduct(){
+            try {
+                const res= await axios.get(`/product/${Id}`)
+              
+          setSingleProduct(res?.data?.result)
+            } catch (error) {
+                
             }
-          } catch (error) {
-              toast.error(error?.response?.data?.error)
-          }
+        }    
+        singleProduct();
+    },[Id])
+    const updateProduct = async (values)=>{
+        try {
+            const res= await axios.patch(`/product/${Id}`,values)
+          console.log(res);
+        } catch (error) {
+            
+        }
     }
-    return (
+    console.log(singleProduct?.productAddedDate);
+    return ( 
         <div>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  ">  
-                    <div className="bg-white   rounded-lg  overflow-auto  max-h-[90vh] p-5 lg:max-w-[70vw] md:max-w-[70vw] max-w-[90vw] w-full border-2">
+            <div className=" ">   
+                    <div className=" ">
                         <div className=" flex justify-between items-center mb-3">
                             <div className="text-left">
-                                <h1 className=" font-semibold text-2xl md:text-xl  font-sans text-gray-900 leading-10 capitalize">add product </h1>
+                                <h1 className=" font-semibold text-2xl md:text-xl  font-sans text-gray-900 leading-10 capitalize">product update</h1>
                             </div>
-                            <button
-                                onClick={handleClose}
-                            >
-                                <CloseIcon />
-                            </button>
+                            
                         </div>
                         <Formik
                             enableReinitialize
                             initialValues={{
-                                 title: "",
-                                 description:"",
-                                 stock:1||null,
-                                 productAddedDate:"" ,
-                                 purchasePrice:1||null,
-                                 sellingPrice:1||null
+                                 title: singleProduct?.title || "sdfsa" ,
+                                 description:singleProduct?.description ||"",
+                                 stock:singleProduct?.stock ||null,
+                                 purchasePrice:singleProduct?.purchasePrice||null,
+                                 sellingPrice:singleProduct?.sellingPrice||null
 
                             }}
                             validate={(values) => {
@@ -60,7 +56,7 @@ const AddProduct = ({ open, handleClose }) => {
                                 return error;
                             }}
                             onSubmit={(values, { resetForm }) => {
-                                ProductAddedapi(values);
+                                updateProduct(values);
                             }}
                         >
                             {({
@@ -71,7 +67,6 @@ const AddProduct = ({ open, handleClose }) => {
                                 handleBlur,
                                 handleSubmit,
                                 isSubmitting,
-
                             }) => (
                                 <form onSubmit={handleSubmit} className='capitalize space-y-2  '>
                                     {/* Product Title fied  */}
@@ -84,6 +79,7 @@ const AddProduct = ({ open, handleClose }) => {
                                             size="small"
                                             type="text"
                                             name="title"
+                                            value={values.title}
                                             placeholder="Enter your product title"
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -102,6 +98,7 @@ const AddProduct = ({ open, handleClose }) => {
                                             size="small"
                                             type="text"
                                             name="description"
+                                            value={values.description}
                                             placeholder="Enter your product description"
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -113,31 +110,7 @@ const AddProduct = ({ open, handleClose }) => {
                                         />
                                         <ErrorMessage name="description" component="div" className="text-red-500 text-sm mt-1" />
                                     </div>
-                                   {/* dropzone area  */}
- 
-<DropzoneArea  
-                                
-                               />
- 
-                               
-                                   
-                                    <div className="mb-8">
-                                        <label htmlFor=" Product Title" className="block lg:text-base text-sm font-normal text-gray-900 leading-4 capitalize mb-1 mt-5">
-                                        product Added Date
-                                        </label>
-                                        <TextField
-                                            size="small"
-                                            type="date"
-                                            name="productAddedDate"
-                                            placeholder="Enter your product date"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            id="outlined-multiline-flexible"
-                                            fullWidth
-
-                                        />
-                                        <ErrorMessage name="productAddedDate" component="div" className="text-red-500 text-sm mt-1" />
-                                    </div>
+                            
                                     <div className="mb-8">
                                         <label htmlFor=" Product Title" className="block lg:text-base text-sm font-normal text-gray-900 leading-4 capitalize mb-1 mt-5">
                                        stock
@@ -146,6 +119,7 @@ const AddProduct = ({ open, handleClose }) => {
                                             size="small"
                                             type="number"
                                             name="stock"
+                                            value={values.stock}
                                             placeholder="Enter your product stock"
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -164,6 +138,7 @@ const AddProduct = ({ open, handleClose }) => {
                                             size="small"
                                             type="number"
                                             name="purchasePrice"
+                                            value={values.purchasePrice}
                                             placeholder="Enter your purchase"
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -182,6 +157,7 @@ const AddProduct = ({ open, handleClose }) => {
                                             size="small"
                                             type="number"
                                             name="sellingPrice"
+                                            value={values.sellingPrice}
                                             placeholder="Enter your selling price"
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -192,9 +168,7 @@ const AddProduct = ({ open, handleClose }) => {
                                         <ErrorMessage name="sellingPrice" component="div" className="text-red-500 text-sm mt-1" />
                                     </div>
                                    <div className="flex gap-4 py-5">
-                                   <button  className=" text-black py-2 px-4 rounded-md   w-full  font-arial font-bold xl:text-lg text-base capitalize hover:bg-blue-600 "  onClick={handleClose}>
-                                     cancel
-                                    </button>
+                                   
                                     <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-black8 w-full  font-arial font-bold xl:text-lg text-base capitalize">
                                        save
                                     </button>
@@ -204,11 +178,8 @@ const AddProduct = ({ open, handleClose }) => {
                         </Formik>
                     </div>
                 </div>
-            </Modal>
         </div>
     );
-};
-
-export default AddProduct;
-
+ };
  
+ export default ReniewProduct;

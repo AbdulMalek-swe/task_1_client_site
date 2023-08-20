@@ -20,6 +20,9 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
+import store from "@/rtk/store";
+import { addUserActions } from "@/rtk/userSlice/addUserSlice";
+import { toast } from "react-toastify";
 
 const drawerWidth = 240;
 function Layout({ children, props }) {
@@ -29,14 +32,24 @@ function Layout({ children, props }) {
   let router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const state = useSelector(state=>state.User?.UserData)
+  console.log(state);
   // find the page latest endpoint name
-  // const pathName = router.pathname.substring(router.pathname.lastIndexOf("/") + 1)
+  const pathName = router.pathname.substring(router.pathname.lastIndexOf("/") + 1)
  let dashboardHead = "Stock"
- let roleBaseDashBoard = "user/user";
- if(state?.role==="admin"){
-  roleBaseDashBoard = "admin/admin"
+ let roleBaseDashBoard = "user/User";
+ if(pathName==="Admin"){
+   dashboardHead = "Admin Dashboard"
  }
-
+ if(pathName==="User"){
+  dashboardHead = "User Dashboard"
+ }
+ if(state?.role==="admin"){
+  roleBaseDashBoard = "admin/Admin"
+ }
+ if(state?.role==="user"){
+  roleBaseDashBoard = "user/User"
+ }
+  
 
   const data = [
     {
@@ -50,16 +63,32 @@ function Layout({ children, props }) {
       icon: "/status-up.svg"
     },
     {
-      path: "/dashboard/user/user",
+      path: "/",
       content: "notification",
       icon: "/notification-circle.svg"
+    },
+  ];
+  const data1 = [
+    {
+      path: `/profile`,
+      content: "Profile",
+      icon: "/profile.svg"
+    },
+    {
+      path: "/",
+      content: "settings",
+      icon: "/setting.svg"
     },
   ]
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
-   
+  const [,,removeCookie] = useCookies(["token"])
+   const logout = async ()=>{
+    store.dispatch(addUserActions.removeUser());
+    removeCookie("token", { path: "/" });
+    toast.success("successfully log out")
+   }
   const drawer = (
     <div>
       <img src="/Logo.svg" alt='loading...' className='w-full h-16 mt-6 mb-8' />
@@ -85,19 +114,33 @@ function Layout({ children, props }) {
             </ListItem></Link>
         )}
       </List>
-
+      <div className='flex items-center justify-between uppercase text-gray-400 mx-3'>
+            <div className="text-sm"> settings</div>
+            
+          </div>
       <List>
-        {['All mail' ].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+      {data1.map(({ path, content, icon }, index) =>
+          <Link href={path} key={index}>
+            <ListItem key={index} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Image src={icon} alt="loading..." width={20} height={100}   />
+                </ListItemIcon>
+                <ListItemText primary={content} className="-ml-7 mt-2  capitalize" />
+              </ListItemButton>
+            </ListItem></Link>
+        )}
       </List>
+      {/* logout code here  */}
+      <button  onClick={logout} >
+            <ListItem  disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Image src="/export.svg" alt="loading..." width={20} height={100}   />
+                </ListItemIcon>
+                <ListItemText primary="logout" className="-ml-7 mt-2  capitalize" />
+              </ListItemButton>
+            </ListItem></button>
     </div>
   );
 
@@ -125,7 +168,7 @@ function Layout({ children, props }) {
           >
             <MenuIcon />
           </IconButton>
-          <h1 className="-ml-2 xl:text2xl md:text-xl text-lg border-2 inline-block"> {dashboardHead} </h1>
+          <h1 className="-ml-2 xl:text2xl md:text-xl text-lg  w-1/2"> {dashboardHead} </h1>
           <div className='w-full flex justify-end items-center'>
             { state?.email && <IconButton sx={{ p: 0 }}>
               <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

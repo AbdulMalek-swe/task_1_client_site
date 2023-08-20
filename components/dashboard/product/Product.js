@@ -2,13 +2,13 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import ShowProduct from './ShowProduct';
 import AddProduct from './AddProduct';
-// import axios from 'axios';
-
+import Link from 'next/link';
+import { useSelector } from 'react-redux';
 const Product = () => {
     const [open, setOpen] =  useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-   
+    const state = useSelector(state=>state.User.UserData)
     return (
         <div>
            <div className='flex justify-between items-center'>
@@ -17,10 +17,14 @@ const Product = () => {
                 <p className='md:text-base text-sm my-1'>Lorem ipsum dolor sit amet consectetur. Risus in nulla faucibus risus.</p>
                </div>
                <div>
-                <button className='flex items-center bg-blue-600 px-3 py-2 rounded-lg text-sm text-white font-bold'  onClick={handleOpen}>  
+              { state?.email ? <button className='flex items-center bg-blue-600 px-3 py-2 rounded-lg text-sm text-white font-bold'  onClick={handleOpen}>  
                     <Image alt='loading...' src='/add.svg' className='mr-3' width={30} height={30}/>
                    <span> Add Product</span>
-                </button>
+                </button>: <Link href="/userForm/Login" className='flex items-center bg-blue-600 px-3 py-2 rounded-lg text-sm text-white font-bold'  onClick={handleOpen}>  
+                    <Image alt='loading...' src='/add.svg' className='mr-3' width={30} height={30}/>
+                   <span> Add Product</span>
+                </Link>
+                }
                </div>
            </div>
            <div className='mt-4'>

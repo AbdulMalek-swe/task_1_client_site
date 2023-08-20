@@ -1,7 +1,7 @@
  
-import DashboardHeader from "./dashboardHeader";
-import DashboardProfit from "./dashboardProfit";
-import DashboardOrder from "./orderDashboard";
+import DashboardHeader from "./HeaderDashboard";
+import DashboardProfit from "./ProfitDashboard";
+import DashboardOrder from "./OrderDashboard";
 
  
 const DashBoardHome = () => {

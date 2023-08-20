@@ -8,33 +8,63 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Image from 'next/image';
- 
-const rows = [
- {
-    name:"abdul karim",
-    product_added:"12-1212",
-    purchase:"1216ft",
-    stock:'availabel',
-    selling:"wow"
- },
- {
-    name:"abdul karim",
-    product_added:"12-1212",
-    purchase:"1216ft",
-    stock:'availabel',
-    selling:"wow"
- },
- {
-    name:"abdul karim",
-    product_added:"12-1212",
-    purchase:"1216ft",
-    stock:'availabel',
-    selling:"wow"
- }
- 
-];
+import { useEffect, useState } from 'react';
+import axios from '../../../utils/axios';
+import { toast } from 'react-toastify';
+import Link from 'next/link';
+import Moment from 'react-moment';
+import { useCookies } from 'react-cookie';
 const ShowProduct = () => {
-     
+  const [cookie] = useCookies(["token"])
+  const token = cookie["token"];
+     const [product,setProduct] = useState([])
+     async function getProduct(){
+      try {
+         const response = await axios.get("/product")
+         const {status,data} = response;
+
+         if(status===200){
+          setProduct(data.result)
+         }
+      } catch (error) {
+         toast.error("")
+      }
+    }
+     useEffect(()=>{
+      getProduct()
+     },[])
+  const deleteProduct = async (id)=>{
+    try {
+      const result = await axios.delete(`/product/${id}`);
+      toast.success("successfully delete product")
+      getProduct()
+    } catch (error) {
+       toast.error(error?.response?.data?.error)
+    }
+  }
+  function filterDate(dateString) {
+    const today = new Date();
+    const productAddedDate = new Date(dateString);
+    
+    if (productAddedDate.toDateString() === today.toDateString()) {
+      return <>
+      Today
+     <Moment format=" HH:mm" >{dateString}</Moment>
+      </>;  
+    } else {
+      return <Moment format="MMM D, YYYY">{dateString}</Moment>;
+    }
+  }
+  function leftProduct(stock, sellCount) {
+    let value = Number(stock)-Number(sellCount);
+    if (value<10) {
+      return <span className='text-red-700'>{value}Left</span>;
+    } else if (value>=0&&value<=20) {
+      return <span className='text-purple-700'>{value}Left</span>;
+    } else {
+      return <span className='text-blue-700'>{value}Left</span>;
+    }
+  }
     return (
         <div>
        <TableContainer component={Paper}> 
@@ -50,25 +80,48 @@ const ShowProduct = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {product?.map((row) => (
             <TableRow
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell align="left" className='text-gray-500 capitalize py-3'>
-                {row.name}
+                {row.title}
               </TableCell>
-              <TableCell align="left" className='text-gray-500 capitalize py-3'>{row.product_added}</TableCell>
-              <TableCell align="left" className='text-gray-500 capitalize py-3'>{row.stock}</TableCell>
-              <TableCell align="left" className='text-gray-500 capitalize py-3'>{row.purchase}</TableCell>
-              <TableCell align="left" className='text-gray-500 capitalize py-3'>{row.selling}</TableCell>
-              <TableCell align="left" className='text-gray-500 capitalize py-3'> 
-                <button className='mr-5'>
-                    <Image src='/trash-2.svg' width={20} height={100} alt='loading...'/>
-                </button>
-                <button>
+              
+<TableCell align="left" className='text-gray-500 capitalize py-3'>
+  {/* <Moment format="MMM D, YYYY">{row.productAddedDate}</Moment> */}
+
+   {filterDate(row?.productAddedDate)}
+  
+  </TableCell>
+              <TableCell align="left" className='text-gray-500 capitalize py-3 '>
+                <span> {row.stock}    </span>
+                 
+                 <span className='ml-8'>
+                   
+                   {leftProduct(row?.stock, row?.sellCount)}
+                    </span> 
+                {/* {sellCount(row?.stock,row?.sellingCount)} */}
+                </TableCell>
+              <TableCell align="left" className='text-gray-500 capitalize py-3'>{row.purchasePrice}</TableCell>
+              <TableCell align="left" className='text-gray-500 capitalize py-3'>{row.sellingPrice}</TableCell>
+              <TableCell align="left" className='text-gray-500 capitalize py-3 flex justify-around'> 
+              {
+                token?<button className='mr-5' onClick={()=>deleteProduct(row._id)}>
+                <Image src='/trash-2.svg' width={20} height={100} alt='loading...'/>
+                 </button>:<Link href={`/userForm/Login`} className='mr-5'>
+                 <Image src='/trash-2.svg' width={20} height={100} alt='loading...'/>
+                </Link>
+              }
+                {
+                  token ? <Link href={`/product/${row._id}`}>
+                  <Image src='/edit-2.svg' width={20} height={100} alt='loading...'/>
+                  </Link>: <Link href="/userForm/Login">
                     <Image src='/edit-2.svg' width={20} height={100} alt='loading...'/>
-                </button>
+                </Link>
+                }
+                
               </TableCell>
             </TableRow>
           ))}
