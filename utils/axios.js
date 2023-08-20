@@ -1,8 +1,15 @@
 import axios from "axios";
+// let url;
+// if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'localhost') {
+//   url = 'http://localhost:5000/api/v1';
+// }
 
-
+// if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
+  url = 'https://task-one-pearl.vercel.app/api/v1';
+// }
+// console.log(url);
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api/v1',
+  baseURL: 'https://task-one-pearl.vercel.app/api/v1',
   headers: {
   //   "Content-Type": "multipart/form-data",
   //  " Access-Control-Allow-Origin":"*",
