@@ -16,7 +16,7 @@ const withAuthUser = (WrappedComponent) => {
         router.push('/dashboard/user/User');
       }
       else if(!token){
-        router.push('/');
+        router.push('/userForm/Login');
       }
     }, [state?.role]);
 
