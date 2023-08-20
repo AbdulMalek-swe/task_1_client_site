@@ -52,6 +52,7 @@ const UserForm = () => {
     <Head>
       <title>Authentication</title>
     </Head>
+     
       <div className="h-screen flex items-center ">
 
         <div className="flex items-center justify-center    md:w-1/2 h-full    ">

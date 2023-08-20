@@ -31,6 +31,7 @@ const Product = () => {
             <ShowProduct/>
             <AddProduct open={open} handleClose={handleClose}/>
            </div>
+          
         </div>
     );
 };

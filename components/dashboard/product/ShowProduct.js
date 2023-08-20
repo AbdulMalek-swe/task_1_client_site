@@ -17,16 +17,21 @@ import { useCookies } from 'react-cookie';
 import { getProduct } from '@/hooks/productFetch';
 import { useSelector } from 'react-redux';
 import { deleteProduct } from '@/hooks/deleteProduct';
+import ReactPaginate from 'react-paginate';
+ 
 const ShowProduct = () => {
   const [cookie] = useCookies(["token"])
   const token = cookie["token"];
- 
-     const product = useSelector(state=>state.reducer.product.products )
-    
+   const product = useSelector(state=>state.reducer.product.products) 
+   const [pageNumber, setPageNumber] = useState(0);
+   const pageCount = Number(product.page)
+   const changePage = ({ selected }) => {
+     setPageNumber(selected);
+   };
      useEffect(()=>{
-       getProduct();
-     },[])
-  
+       getProduct(pageNumber);
+       
+     },[pageNumber])
   function filterDate(dateString) {
     const today = new Date();
     const productAddedDate = new Date(dateString);
@@ -50,10 +55,13 @@ const ShowProduct = () => {
       return <span className='text-blue-700'>{value}Left</span>;
     }
   }
+  
+
+  
     return (
         <div>
-       <TableContainer component={Paper}> 
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+       <TableContainer component={Paper} className='shadow-md'  > 
+        <Table   size="small" aria-label="a dense table"  >
         <TableHead>
           <TableRow >
             <TableCell  className='text-gray-500 capitalize'> Name  <ArrowDownwardIcon/>   </TableCell>
@@ -65,7 +73,7 @@ const ShowProduct = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {product?.map((row) => (
+          {product?.result?.map((row) => (
             <TableRow
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -110,8 +118,28 @@ const ShowProduct = () => {
               </TableCell>
             </TableRow>
           ))}
-        </TableBody>
-      </Table> 
+        </TableBody> 
+      </Table>  
+      <div className='p-4 py-5 relative  '>
+      <ReactPaginate
+        previousLabel={"Previous"}
+        nextLabel={"Next"}
+        pageCount={pageCount}
+        onPageChange={changePage}
+        containerClassName={"paginationBttns"}
+        previousLinkClassName={"previousBttn"}
+        nextLinkClassName={"nextBttn"}
+        disabledClassName={"paginationDisabled"}
+        activeClassName={"paginationActive"}
+      />
+      <div className='arrow-1'>
+        <img src='/arrow-right.svg'/>
+      </div>
+      <div className='arrow-2'>
+        <img src='/arrow-left.svg'/>
+      </div>
+      
+      </div>
     </TableContainer>
         </div>
     );

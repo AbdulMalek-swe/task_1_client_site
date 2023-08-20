@@ -1,26 +1,17 @@
 import axios from "axios";
-// let url;
-// if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'localhost') {
-//   url = 'http://localhost:5000/api/v1';
-// }
-
-// if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
-  url = 'https://task-one-pearl.vercel.app/api/v1';
-// }
-// console.log(url);
+// https://task-one-pearl.vercel.app/
+// http://localhost:5000/api/v1
 const api = axios.create({
-  baseURL: 'https://task-one-pearl.vercel.app/api/v1',
+  baseURL: 'https://task-one-pearl.vercel.app/',
   headers: {
   //   "Content-Type": "multipart/form-data",
   //  " Access-Control-Allow-Origin":"*",
   //  "Access-Control-Allow-Headers":"*",
   },
 });
-
 const TokenGettingtoken = async () => {
   const cookieName = "token";
   const cookies = document.cookie.split(";");
-
   for (let i = 0; i < cookies.length; i++) {
     const cookie = cookies[i].trim();
     if (cookie.startsWith(cookieName + "=")) {
@@ -31,11 +22,9 @@ const TokenGettingtoken = async () => {
   }
   return null;
 };
-
 api.interceptors.request.use(
   async (config) => {
     const token1 = await TokenGettingtoken();
-  
     if (token1?.length > 0) {
       config.headers.Authorization = `Bearer ${token1}`;
     } 
@@ -45,5 +34,4 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 export default api;
