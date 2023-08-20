@@ -2,7 +2,7 @@ import axios from "axios";
 // https://task-one-pearl.vercel.app/
 // http://localhost:5000/api/v1
 const api = axios.create({
-  baseURL: 'https://task-one-pearl.vercel.app/',
+  baseURL: 'https://task-one-pearl.vercel.app/api/v1',
   headers: {
   //   "Content-Type": "multipart/form-data",
   //  " Access-Control-Allow-Origin":"*",
